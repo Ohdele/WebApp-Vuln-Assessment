@@ -19,11 +19,7 @@
 **Resolution Steps:**
 1. **Database Fix**
    - Created a dedicated database user:
-     ```sql
-     CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'password';
-     GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa_user'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
-     FLUSH PRIVILEGES;
-     ```
+
 2. **Configuration Update**
    - Updated `/var/www/html/dvwa/config/config.inc.php` to use the new database credentials.
 
