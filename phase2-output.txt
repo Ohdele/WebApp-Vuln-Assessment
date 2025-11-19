@@ -1,1 +1,55 @@
-Phase 2 DVWA deployment and fixes completed. Outputs recorded previously.
+dele@VPNSERVER:~$ sudo tail -n 20 /var/log/apache2/error.log
+[Tue Nov 18 13:51:01.821917 2025] [php:error] [pid 3618] [client 192.168.10.20:40726] PHP Fatal error: Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' in /var/www/html/dvwa/dvwa/includes/DBMS/MySQL.php:13\nStack trace:\n#0 /var/www/html/dvwa/dvwa/includes/DBMS/MySQL.php(13): mysqli_connect()\n#1 /var/www/html/dvwa/setup.php(23): include_once('...')\n#2 {main}\n thrown in /var/www/html/dvwa/dvwa/includes/DBMS/MySQL.php on line 13, referer: http://192.168.10.11/dvwa/setup.php
+
+dele@VPNSERVER:~$ sudo mysql
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+Your MariaDB connection id is 48
+Server version: 10.6.22-MariaDB-0ubuntu0.22.04.1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE USER 'dvwa_user'@'localhost' IDENTIFIED BY 'password';
+Query OK, 0 rows affected (0.014 sec)
+
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa_user'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+Query OK, 0 rows affected (0.008 sec)
+
+MariaDB [(none)]> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.003 sec)
+
+MariaDB [(none)]> exit
+Bye
+
+dele@VPNSERVER:~$ sudo nano /var/www/html/dvwa/config/config.inc.php
+# (Content of config.inc.php was edited to change db_user and db_password)
+
+dele@VPNSERVER:~$ sudo service apache2 restart
+dele@VPNSERVER:~$ 
+
+dele@VPNSERVER:~$ sudo nano /etc/apache2/sites-enabled/000-default.conf
+# (Content of 000-default.conf was edited to change DocumentRoot, then reverted)
+
+dele@VPNSERVER:~$ sudo service apache2 restart
+dele@VPNSERVER:~$ 
+
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ git add .
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ git commit -m "COMPLETED: Phase 2 documentation and log content finalized"
+[main 6f29a0c] COMPLETED: Phase 2 documentation and log content finalized
+ 3 files changed, 20 insertions(+), 1 deletion(-)
+ create mode 100644 phase1_log.txt
+ rename .log.txt.swp => phase2_log.txt (100%)
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ git push origin main
+Username for 'https://github.com': Ohdele
+Password for 'https://Ohdele@github.com': 
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 444 bytes | 444.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0
+To https://github.com/Ohdele/WebApp-Vuln-Assessment.git
+ d632ccb..6f29a0c  main -> main
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$
+
