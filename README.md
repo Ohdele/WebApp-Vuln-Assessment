@@ -37,7 +37,7 @@
 
 ## Phase 3: Reconnaissance (Nmap and Directory Enumeration)
 
-**Objective:** Perform network port scanning (Nmap) and directory enumeration on the target server >
+**Objective:** Perform network port scanning (Nmap) and directory enumeration on the target server to identify running services, non‑standard ports, and hidden application paths.
 
 [View Commands and Outputs in phase3_log.txt]
 

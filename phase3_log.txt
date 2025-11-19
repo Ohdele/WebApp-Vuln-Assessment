@@ -1,0 +1,89 @@
+# Phase 3 – Reconnaissance
+
+## Nmap Scan
+
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ nmap -sV -sC 192.168.10.11
+Starting Nmap 7.80 ( https://nmap.org ) at 2025-11-19 04:26 UTC
+Nmap scan report for 192.168.10.11
+Host is up (0.00068s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE     VERSION
+80/tcp   open  http        Apache httpd 2.4.52 ((Ubuntu))
+|_http-server-header: Apache/2.4.52 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+139/tcp  open  netbios-ssn Samba smbd 4.6.2
+445/tcp  open  netbios-ssn Samba smbd 4.6.2
+2222/tcp open  ssh         OpenSSH 8.9p1 Ubuntu 3ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_nbstat: NetBIOS name: VPNSERVER, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2025-11-19T04:27:10
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.10 seconds
+
+
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ gobuster -u http://192.168.10.11/dvwa/ -w /usr/share/wordlists/dirb/common.txt
+2025/11/19 04:33:14 [!] 1 error occurred:
+	* Wordlist (-w): File does not exist: /usr/share/wordlists/dirb/common.txt
+
+## Directory Enumeration (DIRB)
+
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ dirb http://192.168.10.11/dvwa/ /usr/share/dirb/wordlists/common.txt
+
+-----------------
+DIRB v2.22    
+By The Dark Raver
+-----------------
+
+START_TIME: Wed Nov 19 04:35:52 2025
+URL_BASE: http://192.168.10.11/dvwa/
+WORDLIST_FILES: /usr/share/dirb/wordlists/common.txt
+
+-----------------
+
+GENERATED WORDS: 4612                                                          
+
+---- Scanning URL: http://192.168.10.11/dvwa/ ----
++ http://192.168.10.11/dvwa/.git/HEAD (CODE:200|SIZE:23)                                               
+==> DIRECTORY: http://192.168.10.11/dvwa/config/                                                       
+==> DIRECTORY: http://192.168.10.11/dvwa/database/                                                     
+==> DIRECTORY: http://192.168.10.11/dvwa/docs/                                                         
+==> DIRECTORY: http://192.168.10.11/dvwa/external/                                                     
++ http://192.168.10.11/dvwa/favicon.ico (CODE:200|SIZE:1406)                                           
++ http://192.168.10.11/dvwa/index.php (CODE:302|SIZE:0)                                                
++ http://192.168.10.11/dvwa/php.ini (CODE:200|SIZE:154)                                                
++ http://192.168.10.11/dvwa/phpinfo.php (CODE:302|SIZE:0)                                              
++ http://192.168.10.11/dvwa/robots.txt (CODE:200|SIZE:25)                                              
+==> DIRECTORY: http://192.168.10.11/dvwa/tests/                                                        
+                                                                                                       
+---- Entering directory: http://192.168.10.11/dvwa/config/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                                                       
+---- Entering directory: http://192.168.10.11/dvwa/database/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                                                       
+---- Entering directory: http://192.168.10.11/dvwa/docs/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                                                       
+---- Entering directory: http://192.168.10.11/dvwa/external/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                                                       
+---- Entering directory: http://192.168.10.11/dvwa/tests/ ----
+(!) WARNING: Directory IS LISTABLE. No need to scan it.                        
+    (Use mode '-w' if you want to scan it anyway)
+                                                                               
+-----------------
+END_TIME: Wed Nov 19 04:35:55 2025
+DOWNLOADED: 4612 - FOUND: 6
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$
