@@ -41,3 +41,10 @@
 
 [View Commands and Outputs in phase3_log.txt]
 
+---
+
+## Phase 4: Vulnerability Analysis and Exploitation
+
+**Objective:** Test for and successfully exploit three key vulnerabilities (SQL Injection, Local File Inclusion, and File Upload) on the DVWA application to confirm compromise.
+
+[View Commands and Outputs in phase4_log.txt]

