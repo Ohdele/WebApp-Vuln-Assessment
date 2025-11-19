@@ -48,3 +48,11 @@
 **Objective:** Test for and successfully exploit three key vulnerabilities (SQL Injection, Local File Inclusion, and File Upload) on the DVWA application to confirm compromise.
 
 [View Commands and Outputs in phase4_log.txt]
+
+---
+
+## Phase 5: Post-Exploitation and Privilege Escalation
+
+**Objective:** Escalate privileges from the compromised web user (`www-data`) to the system administrator (root) by exploiting local vulnerabilities.
+
+[View Commands and Outputs in phase5_log.txt]
